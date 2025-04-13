@@ -42,7 +42,7 @@ public class PetShopSistema {
                         scanner.close();
                         return;
                     default:
-                        System.out.println("Opção inválida. Tente novamente.");
+                        throw new ExcecaoPersonalizada("Opção inválida. Tente novamente.");
                 }
             } catch (InputMismatchException e) {
                 System.err.println("Erro: Entrada inválida. Digite um número.");
@@ -134,22 +134,122 @@ public class PetShopSistema {
         }
     }
 
-    // Métodos semelhantes para gerenciar Animais, Serviços, Produtos e Agendamentos
-    // (Implementações completas seriam extensas, mas seguiriam o mesmo padrão de menu,
-    // entrada de dados com tratamento de InputMismatchException e lógica de CRUD
-    // com possível lançamento de ExcecaoPersonalizada para regras de negócio).
+    private static void gerenciarAnimais() {
+        while (true) {
+            System.out.println("\n--- Gerenciar Animais ---");
+            System.out.println("1. Criar Animal");
+            System.out.println("2. Listar Animais");
+            System.out.println("3. Voltar");
+            System.out.print("Escolha uma opção: ");
+            int opcao = lerOpcao();
+            scanner.nextLine();
 
-    private static void gerenciarAnimais() { /* ... */ }
-    private static void criarAnimal() { /* ... */ }
-    private static void listarAnimais() { /* ... */ }
+            try {
+                switch (opcao) {
+                    case 1:
+                        criarAnimal();
+                        break;
+                    case 2:
+                        listarAnimais();
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("Opção inválida.");
+                }
+            } catch (ExcecaoPersonalizada e) {
+                System.err.println("Erro ao gerenciar animal: " + e.getMessage());
+            }
+        }
+    }
 
-    private static void gerenciarServicos() { /* ... */ }
-    private static void criarServico() { /* ... */ }
-    private static void listarServicos() { /* ... */ }
+    private static void criarAnimal() throws ExcecaoPersonalizada {
+        System.out.print("Nome do animal: ");
+        String nome = scanner.nextLine();
+        System.out.print("Espécie: ");
+        String especie = scanner.nextLine();
+        System.out.print("Raça: ");
+        String raca = scanner.nextLine();
 
-    private static void gerenciarProdutos() { /* ... */ }
-    private static void criarProduto() { /* ... */ }
-    private static void listarProdutos() { /* ... */ }
+        if (nome.trim().isEmpty() || especie.trim().isEmpty() || raca.trim().isEmpty()) {
+            throw new ExcecaoPersonalizada("Todos os campos do animal devem ser preenchidos.");
+        }
+
+        Animal animal = new Animal(nome, especie, raca);
+        animais.add(animal);
+        System.out.println("Animal criado: " + animal);
+    }
+
+    private static void listarAnimais() {
+        if (animais.isEmpty()) {
+            System.out.println("Nenhum animal cadastrado.");
+        } else {
+            System.out.println("--- Lista de Animais ---");
+            for (Animal animal : animais) {
+                System.out.println(animal);
+            }
+        }
+    }
+
+    private static void gerenciarServicos() {
+        while (true) {
+            System.out.println("\n--- Gerenciar Serviços ---");
+            System.out.println("1. Criar Serviço");
+            System.out.println("2. Listar Serviços");
+            System.out.println("3. Voltar");
+            System.out.print("Escolha uma opção: ");
+            int opcao = lerOpcao();
+            scanner.nextLine();
+
+            try {
+                switch (opcao) {
+                    case 1:
+                        criarServico();
+                        break;
+                    case 2:
+                        listarServicos();
+                        break;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("Opção inválida.");
+                }
+            } catch (ExcecaoPersonalizada e) {
+                System.err.println("Erro ao gerenciar serviço: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void criarServico() throws ExcecaoPersonalizada {
+        System.out.print("Descrição do serviço: ");
+        String descricao = scanner.nextLine();
+        if(descricao.trim().isEmpty()){
+            throw new ExcecaoPersonalizada("Descrição do serviço não pode ser vazia.");
+        }
+        Servico servico = new Servico(descricao);
+        servicos.add(servico);
+        System.out.println("Serviço criado: " + servico);
+    }
+
+    private static void listarServicos() {
+        if (servicos.isEmpty()) {
+            System.out.println("Nenhum serviço cadastrado.");
+        } else {
+            System.out.println("--- Lista de Serviços ---");
+            for (Servico servico : servicos) {
+                System.out.println(servico);
+            }
+        }
+    }
+    private static void gerenciarProdutos() { /* ... */
+        System.out.println("Not implemented yet");
+    }
+    private static void criarProduto() { /* ... */
+        System.out.println("Not implemented yet");
+    }
+    private static void listarProdutos() { /* ... */
+        System.out.println("Not implemented yet");
+    }
 
     private static void gerenciarAgendamentos() {
         while (true) {
@@ -218,4 +318,5 @@ public class PetShopSistema {
             }
         }
     }
+
 }
